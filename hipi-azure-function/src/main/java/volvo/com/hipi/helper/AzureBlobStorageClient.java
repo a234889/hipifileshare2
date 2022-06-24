@@ -37,7 +37,7 @@ public class AzureBlobStorageClient {
         DataLakeServiceClientBuilder builder = new DataLakeServiceClientBuilder();
 
         builder.credential(sharedKeyCredential);
-        builder.endpoint("https://" + accountName + ".dfs.core.windows.net");
+        builder.endpoint("https://hipideveuwst01.blob.core.windows.net/");
         dataLakeServiceClient = builder.buildClient();
         return dataLakeServiceClient;
     }
