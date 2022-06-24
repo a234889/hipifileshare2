@@ -75,13 +75,14 @@ public class HttpTriggerFunction {
              file = downloadFile(reportType, reportNo, reportId);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            context.getLogger().info(e.getMessage());
             e.printStackTrace();
         }
 
         context.getLogger().info(file.getAbsolutePath())
         String zipName = reportNo+"_"+reportId;
-
+        context.getLogger().info("length : "+file.length)
+        
         byte[] b =readFileToBytes(file);
         System.out.println("byte length " +  b.length);
         HttpResponseMessage response = request.createResponseBuilder(HttpStatus.OK).body((Object)b).header("Content-Disposition", "attachment; filename=" + zipName+".zip").build();
