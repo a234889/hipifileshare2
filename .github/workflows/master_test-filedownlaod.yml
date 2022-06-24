@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Java project to Azure Function App - test-filedownlaod
+name: Build and deploy Java project to Azure Function App - javaFunc037
 
 on:
   push:
@@ -10,9 +10,9 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_NAME: test-filedownlaod # set this to your function app name on Azure
+  AZURE_FUNCTIONAPP_NAME: javaFunc037 # set this to your function app name on Azure
   PACKAGE_DIRECTORY: '.' # set this to the directory which contains pom.xml file
-  JAVA_VERSION: '8' # set this to the java version to use
+  JAVA_VERSION: '11' # set this to the java version to use
 
 jobs:
   build-and-deploy:
@@ -36,8 +36,8 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'test-filedownlaod'
+          app-name: 'javaFunc037'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C8EDEA81356E4236997A36B7464C8644 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_084EB4808F0D4788A06F271D0400871B }}
           package: '${{ env.PACKAGE_DIRECTORY }}/hipi-azure-function'
           respect-pom-xml: true
