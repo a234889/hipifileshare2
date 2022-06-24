@@ -27,7 +27,12 @@ import com.azure.storage.file.datalake.models.PathItem;
 
 public class DownloadFromAzure {
 	
-	Logger logger = LoggerFactory.getLogger(DownloadFromAzure.class);
+	Logger log = LoggerFactory.getLogger(DownloadFromAzure.class);
+	private java.util.logging.Logger logger;
+
+	public void setContextLog(java.util.logging.Logger logger){
+		this.logger =logger;
+	}
 	
 	public Set<String> getBlobIdsForReportIdNum(String reportNo,String reportId,String reportType) throws Exception{
 		System.out.println("getting blobids files for reportId : "+reportId);
@@ -48,7 +53,7 @@ public class DownloadFromAzure {
 		}
 		} catch(TableServiceException e){
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			logger.info("Error :" +e.getMessage());
 		}
 	    return new HashSet<>();
 	}
@@ -127,7 +132,7 @@ public class DownloadFromAzure {
 		List<File> files = new ArrayList<>();
 		DataLakeDirectoryClient directoryClient = dataLakeFileSystemClient.getDirectoryClient("Attachments").getSubdirectoryClient(reportType+"Files").getSubdirectoryClient(reportNo);
 		System.out.println(directoryClient.getDirectoryUrl());
-
+		logger.info(directoryClient.getDirectoryUrl());
 		DataLakeFileClient fileClient ;//= directoryClient.getFileClient("pr_mig_1092286_DQ6376M.pdf");
 		File file; //=  new File(timestamp + "pr_mig_1092286_DQ6376M.pdf");
 
@@ -144,9 +149,11 @@ public class DownloadFromAzure {
 				if (item!=null && !item.isDirectory()) {
 
 					System.out.println(item.getName());
+					logger.info(item.getName());
 					filename = item.getName().substring(item.getName().lastIndexOf("/") + 1);
 					if (matchingBlobId(reportIdAttachmentBlobIds, filename)) {
 						System.out.println(filename);
+						logger.info(item.getName());
 						fileClient = directoryClient.getFileClient(filename);
 						file = new File(timestamp + filename);
 
@@ -162,12 +169,14 @@ public class DownloadFromAzure {
 				} else if(reportId != null && !"".equals(reportId)) {
 					String  dirName= item.getName().substring(item.getName().lastIndexOf("/") + 1);
 					System.out.println(dirName );
+					logger.info(dirName);
 					 addReportFilesFromSubDir(reportId, dirName, directoryClient, timestamp,files);
 				}
 			}
 
 		} catch(Exception e){
 			e.printStackTrace();
+			logger.info("Exception : "+ e.getMessage());
 		}
 		return files;
 	}
@@ -199,6 +208,7 @@ public class DownloadFromAzure {
 
 			} catch(Exception e){
 				e.printStackTrace();
+				logger.info("Exception : "+ e.getMessage());
 			}
 		 }
 	}
