@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
-# More GitHub Actions for Azure: https://github.com/Azure/actions 
+# More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Java project to Azure Function App - hipifile
+name: Build and deploy Java project to Azure Function App - javaFunc037
 
 on:
   push:
@@ -10,9 +10,9 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_NAME: hipifile # set this to your function app name on Azure
+  AZURE_FUNCTIONAPP_NAME: javaFunc037 # set this to your function app name on Azure
   PACKAGE_DIRECTORY: '.' # set this to the directory which contains pom.xml file
-  JAVA_VERSION: '8' # set this to the java version to use
+  JAVA_VERSION: '11' # set this to the java version to use
 
 jobs:
   build-and-deploy:
@@ -29,19 +29,15 @@ jobs:
       - name: 'Restore Project Dependencies Using Mvn'
         shell: pwsh
         run: |
-          echo ls
-          pushd './'
-          echo ls
-          pushd '../../'
-          echo ls
+          pushd './${{ env.PACKAGE_DIRECTORY }}/hipi-azure-function'
           mvn clean package
           popd
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'hipifile'
-          slot-name: 'HttpExample'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B43E7E1D4BA7474B93EFAA71B0ACDFE1 }}
-          package: '${{ env.PACKAGE_DIRECTORY }}'
+          app-name: 'javaFunc037'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_084EB4808F0D4788A06F271D0400871B }}
+          package: '${{ env.PACKAGE_DIRECTORY }}/hipi-azure-function'
           respect-pom-xml: true
