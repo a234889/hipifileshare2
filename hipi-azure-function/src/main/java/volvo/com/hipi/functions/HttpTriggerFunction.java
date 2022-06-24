@@ -79,8 +79,7 @@ public class HttpTriggerFunction {
             e.printStackTrace();
         }
 
-        System.out.println(file.getAbsolutePath());
-
+        context.getLogger().info(file.getAbsolutePath())
         String zipName = reportNo+"_"+reportId;
 
         byte[] b =readFileToBytes(file);
