@@ -54,6 +54,7 @@ public class HttpTriggerFunction {
     public static String AUTHORITY = "https://login.microsoftonline.com/f25493ae-1c98-41d7-8a33-0be75f5fe603";
     private DownloadFromAzure downloadFromAzure;
     private Logger log;
+
     public HttpTriggerFunction() throws URISyntaxException {
         downloadFromAzure = new DownloadFromAzure();
 
@@ -67,7 +68,7 @@ public class HttpTriggerFunction {
                     authLevel = AuthorizationLevel.ANONYMOUS)
                     HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) throws IOException {
-        log =  context.getLogger();
+        log = context.getLogger();
         downloadFromAzure.setContextLog(log);
         log.info("Java HTTP trigger processed a request.");
         // Parse query parameter
@@ -75,21 +76,22 @@ public class HttpTriggerFunction {
         final String reportNo = request.getQueryParameters().get("reportNo");
         final String reportId = request.getQueryParameters().get("reportId");
         File file = null;
-        try {
-             file = downloadFile(reportType, reportNo, reportId);
-            log.info( "Zip formed without exception : " +file.getAbsolutePath());
-        } catch (Exception e) {
-            log.info(e.getMessage());
+        // try {
+        file = downloadFile(reportType, reportNo, reportId);
+        log.info("Zip formed without exception : " + file.getAbsolutePath());
+        log.info("Zip length: " + file.length());
+        /*} catch (Exception e) {
+            log.info("Error " +e.getMessage());
             e.printStackTrace();
-        }
+        }*/
 
         log.info(file.getAbsolutePath());
 
-        String zipName = reportNo+"_"+reportId;
+        String zipName = reportNo + "_" + reportId;
 
-        byte[] b =readFileToBytes(file);
-        log.info("byte length " +  b.length);
-        HttpResponseMessage response = request.createResponseBuilder(HttpStatus.OK).body((Object)b).header("Content-Disposition", "attachment; filename=" + zipName+".zip").build();
+        byte[] b = readFileToBytes(file);
+        log.info("byte length " + b.length);
+        HttpResponseMessage response = request.createResponseBuilder(HttpStatus.OK).body((Object) b).header("Content-Disposition", "attachment; filename=" + zipName + ".zip").build();
         file.delete();
         return response;
 
@@ -112,7 +114,7 @@ public class HttpTriggerFunction {
                 fis.close();
             }
         }
-return bytes;
+        return bytes;
     }
 
 
@@ -133,7 +135,7 @@ return bytes;
         List<File> files = null;
         FileOutputStream fos;
         ZipOutputStream zos;
-        File zipFile = new File(reportid+".zip");
+        File zipFile = new File(reportid + ".zip");
         try {
             files = downloadFromAzure.getAttachmentsFromAzureBlob(reportno, reportid, reportType);
             fos = new FileOutputStream(zipFile);
